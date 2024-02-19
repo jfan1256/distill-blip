@@ -1,6 +1,10 @@
 # DLIP V2 (Distilling BLIP)
 
+----------
+
 Distilled BLIP model (VIT Small, BERT Small, and BLIP Base) achieves similar performance to BLIP with 4x the speed in captioning and retrieval. This repo replicates the performance achieved in this [paper](https://arxiv.org/abs/2308.12956).
+
+----------
 
 ## Instructions to download datasets
 
@@ -33,7 +37,9 @@ Refer to [here](https://homes.cs.washington.edu/~ranjay/visualgenome/index.html)
 #### Flickr30K
 Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) for more details.
 
-## Preprocessing datasets (for pretraining)
+----------
+
+## Preprocess (for pretraining)
 Once everything is downloaded, to ensure that json_dataset.py works, please ensure this file structure:
 
 ```
@@ -52,6 +58,7 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
 
 Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using a Pytorch dataloader.
 The output dictionary (all.json) will look like this:
+
 ```json
 [{
   "caption": "bridge street in the rain ..",
@@ -64,15 +71,101 @@ The output dictionary (all.json) will look like this:
   "id": 0
 }]
 ```
-
-## Pretraining
+----------
+## Pretrain
 To pretrain, run pretrain_dlip.py or type this command for multi-gpu training:
 python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
 
 *Note: I Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO (which achieved results similar to paper).*
 
-## Finetuning
+----------
+
+## Finetune
 After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr.py and train_dlip_caption_flickr.py. The model will be finetuned on Flickr30K.
 
-## Evaluting
-If you would like to evaluate the model, run the eval scripts in the eval directory. Ensure that your are using the correct model checkpiont.
+```
+DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
+
+| Metric           | DLIP   | BLIP   |
+|------------------|--------|--------|
+| `train_lr`       | 0.000  | 0.000  |
+| `train_loss_itm` | 0.073  | 0.054  |
+| `train_loss_ita` | 2.349  | 1.968  |
+| `test_txt_r1`    | 88.9   | 97.2   |
+| `test_txt_r5`    | 98.4   | 99.9   |
+| `test_txt_r10`   | 99.7   | 100.0  |
+| `test_img_r1`    | 76.36  | 87.6   |
+| `test_img_r5`    | 93.44  | 97.7   |
+| `test_img_r10`   | 96.12  | 98.9   |
+
+```
+
+More details on BLIP results can be found [here](https://arxiv.org/pdf/2201.12086.pdf).
+
+----------
+
+## Evaluation
+If you would like to evaluate the model, run the eval scripts in the eval directory. Ensure that you are using the correct model checkpoint.
+
+----------
+
+## Production
+If you would like to use the model for production, utilize the DLIPProd class in the prod directory. 
+
+----------
+### Demo
+```
+# Load Model
+print("-"*120)
+print("Loading model...")
+dlip_caption = DLIPProd(name='caption', weight='../save/dlip_caption_flickr.pth', device='cpu')
+dlip_retrieval = DLIPProd(name='retrieval', weight='../save/dlip_retrieval_flickr.pth', device='cpu')
+print("Finished loading model!")
+
+# Generate Caption
+print("-"*120)
+print("Generating...")
+image = Image.open('../export/share/datasets/vision/flickr30k/flickr30k-images/flickr30k_images/148284.jpg')
+caption = dlip_caption.generate(image)
+print("Generated Caption: {}".format(caption))
+print("Finished generating captions!")
+
+# Get Image Feat and Text Feat
+print("-"*120)
+print("Getting image and text feature...")
+image_feat = dlip_retrieval.get_image_feat(image)
+text_feat = dlip_retrieval.get_text_feat(caption)
+print("Image feature shape: {}".format(image_feat.shape))
+print("Text feature shape: {}".format(text_feat.shape))
+print("Finished getting features!")
+print("-"*120)
+```
+### Output
+```
+------------------------------------------------------------------------------------------------------------------------
+Loading model...
+Finished loading model!
+------------------------------------------------------------------------------------------------------------------------
+Generating...
+Generated Caption: ['an african american in front of the spanish door']
+Finished generating captions!
+------------------------------------------------------------------------------------------------------------------------
+Getting image and text feature...
+Image feature shape: torch.Size([1, 256])
+Text feature shape: torch.Size([1, 256])
+Finished getting features!
+------------------------------------------------------------------------------------------------------------------------
+Loading model...
+Finished loading model!
+------------------------------------------------------------------------------------------------------------------------
+Generating...
+Generated Caption: ['an african american in front of the spanish door']
+Finished generating captions!
+------------------------------------------------------------------------------------------------------------------------
+Getting image and text feature...
+Image feature shape: torch.Size([1, 256])
+Text feature shape: torch.Size([1, 256])
+Finished getting features!
+------------------------------------------------------------------------------------------------------------------------
+```
+
