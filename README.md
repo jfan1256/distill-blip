@@ -50,7 +50,7 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
   │   └── region_descriptions.json
 ```
 
-Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using Pytorch dataloader.
+Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using a Pytorch dataloader.
 The output dictionary (all.json) will look like this:
 ```json
 [{
