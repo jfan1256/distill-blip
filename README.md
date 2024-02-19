@@ -101,7 +101,7 @@ Here is a result comparison between DLIP Retrieval vs. BLIP (CapFilt-L) Retrieva
 | `test_img_r10`   | 96.12  | 98.9   |
 
 ```
-As you can see, DLIP is practically as accurate as DLIP despite being 10x smaller.
+As you can see, DLIP is practically as accurate as BLIP despite being 10x smaller.
 More details on BLIP results can be found [here](https://arxiv.org/pdf/2201.12086.pdf).
 
 ----------
