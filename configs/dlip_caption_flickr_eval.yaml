@@ -1,0 +1,29 @@
+# Data
+image_root: 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/flickr30k/'
+ann_root: 'annotation'
+dataset: 'flickr'
+dataloader: 'retrieval_flickr'
+
+# Train
+batch_size: 32
+image_size: 384
+batch_size_test: 64
+
+# Pretrain Dlip
+pretrained: '../save/dlip_caption_flickr.pth'
+
+# Vit
+vit: 'small'
+vit_grad_ckpt: True
+vit_ckpt_layer: 4
+negative_all_rank: False
+
+# Bert
+bert: 'small'
+med_config: '../configs/bert-small_config.json'
+
+# Optimizer
+init_lr: 0.00005
+weight_decay: 0.05
+min_lr: 0
+max_epoch: 6

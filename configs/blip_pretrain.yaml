@@ -1,0 +1,28 @@
+# Data
+image_root: 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/flickr30k/'
+ann_root: 'annotation'
+dataset: 'flickr'
+
+# Vit
+vit: 'base'
+vit_grad_ckpt: False
+vit_ckpt_layer: 0
+batch_size_train: 8
+batch_size_test: 8
+
+# Train
+image_size: 224
+batch_size: 75
+queue_size: 57600
+alpha: 0.4
+max_epoch: 20
+
+# Optimizer
+weight_decay: 0.05
+init_lr: 0.0003
+min_lr: 0.0000001
+warmup_lr: 0.0000001
+lr_decay_rate: 0.9
+warmup_steps: 3000
+
+
