@@ -1,7 +1,9 @@
 # DLIP V2 (Distilling BLIP)
+
 This repo replicates the performance achieved in this [paper](https://arxiv.org/abs/2308.12956).
 
 ## Instructions to download datasets
+
 To download CC3M (Google Conceptual Captions 3M), COCO, and SBU (SBU Captions) run the following commands in each subdirectory (i.e., cd to cc3m and run the script):
 /datadrive
   /cc3m
@@ -12,15 +14,21 @@ To download CC3M (Google Conceptual Captions 3M), COCO, and SBU (SBU Captions) r
 Refer to Img2Dataset directly for more information [here](https://github.com/rom1504/img2dataset/blob/main/dataset_examples/cc3m.md). 
 
 #### CC3M
+```bash
 img2dataset --url_list cc3m.tsv --input_format "tsv" --url_col "url" --caption_col "caption" --output_format files --output_folder cc3m --processes_count 16 --thread_count 64 --image_size 224
+```
 #### COCO
+```bash
 img2dataset --url_list mscoco.parquet --input_format "parquet" --url_col "URL" --caption_col "TEXT" --output_format files --output_folder mscoco --processes_count 16 --thread_count 64 --image_size 224
+```
 #### SBU 
+```bash
 img2dataset --url_list sbu-captions-all.json --input_format "json" --url_col "image_urls" --caption_col "captions" --output_format files --output_folder sbucaptions --processes_count 16 --thread_count 64 --image_size 224
+```
 #### VGO
-Refer to [here](https://homes.cs.washington.edu/~ranjay/visualgenome/index.html)https://homes.cs.washington.edu/~ranjay/visualgenome/index.html
+Refer to [here](https://homes.cs.washington.edu/~ranjay/visualgenome/index.html) for more details.
 #### Flickr30K
-Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset.
+Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset) for more details.
 
 ## Preprocessing datasets (for pretraining)
 Once everything is downloaded, to ensure that json_dataset.py works, please ensure this file structure:
@@ -58,5 +66,3 @@ After pretraining dlip, you can finetune the pretrained dlip model for retrieval
 
 ## Evaluting
 If you would like to evaluate the model, run the eval scripts in the eval directory. Ensure that your are using the correct model checkpiont.
-
-
