@@ -56,7 +56,8 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
   │   └── region_descriptions.json
 ```
 
-Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using a Pytorch dataloader.
+Once everything is set, run json_dataset.py, and it will output all.json in a self-created directory '/datadrive/dataloader', 
+which contains all image-caption items from CC3M, COCO, SBU, and VGO . This dictionary will be used for pretraining dlip.
 The output dictionary (all.json) will look like this:
 
 ```json
