@@ -115,7 +115,7 @@ If you would like to evaluate the model, run the eval scripts in the eval direct
 If you would like to use the model for production, utilize the DLIPProd class in the prod directory. 
 
 ----------
-### Demo
+## Demo
 ```
 # Load Model
 print("-"*120)
@@ -142,7 +142,7 @@ print("Text feature shape: {}".format(text_feat.shape))
 print("Finished getting features!")
 print("-"*120)
 ```
-### Output
+#### Output
 ```
 ------------------------------------------------------------------------------------------------------------------------
 Loading model...
