@@ -92,7 +92,7 @@ Here is a result comparison between DLIP Retrieval vs. BLIP (CapFilt-L) Retrieva
 |------------------|--------|--------|
 | `train_lr`       | 0.000  | 0.000  |
 | `train_loss_itm` | 0.073  | 0.054  |
-| `train_loss_ita` | 2.349  | 1.968  |
+| `train_loss_ita` | 2.349  | 2.332  |
 | `test_txt_r1`    | 88.9   | 97.2   |
 | `test_txt_r5`    | 98.4   | 99.9   |
 | `test_txt_r10`   | 99.7   | 100.0  |
