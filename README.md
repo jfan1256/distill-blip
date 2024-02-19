@@ -32,6 +32,7 @@ Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 
 ## Preprocessing datasets (for pretraining)
 Once everything is downloaded, to ensure that json_dataset.py works, please ensure this file structure:
+```json
 /datadrive
   /cc3m
     /cc3m (contains all the .parquet, 0000 subdir, etc.)
@@ -46,6 +47,7 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
 
 Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using Pytorch dataloader.
 The output dictionary (all.json) will look like this:
+```json
 [{
   "caption": "bridge street in the rain ..",
   "image_root": "/datadrive/sbu/sbucaptions/00000/000000015.jpg",
