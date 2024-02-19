@@ -1,25 +1,17 @@
-'''
- * Copyright (c) 2022, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- * By Junnan Li
-'''
-import warnings
+import torch
+import torch.nn.functional as F
+import os
 
+import warnings
 warnings.filterwarnings("ignore")
+
+from torch import nn
+from transformers import BertTokenizer
+from urllib.parse import urlparse
+from timm.models.hub import download_cached_file
 
 from models.vit import VisionTransformer, interpolate_pos_embed
 from models.med import BertConfig, BertModel, BertLMHeadModel
-from transformers import BertTokenizer
-
-import torch
-from torch import nn
-import torch.nn.functional as F
-
-import os
-from urllib.parse import urlparse
-from timm.models.hub import download_cached_file
 
 class BLIP_Base(nn.Module):
     def __init__(self,
