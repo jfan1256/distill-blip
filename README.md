@@ -157,17 +157,5 @@ Image feature shape: torch.Size([1, 256])
 Text feature shape: torch.Size([1, 256])
 Finished getting features!
 ------------------------------------------------------------------------------------------------------------------------
-Loading model...
-Finished loading model!
-------------------------------------------------------------------------------------------------------------------------
-Generating...
-Generated Caption: ['an african american in front of the spanish door']
-Finished generating captions!
-------------------------------------------------------------------------------------------------------------------------
-Getting image and text feature...
-Image feature shape: torch.Size([1, 256])
-Text feature shape: torch.Size([1, 256])
-Finished getting features!
-------------------------------------------------------------------------------------------------------------------------
 ```
 
