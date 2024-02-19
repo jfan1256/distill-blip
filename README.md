@@ -6,11 +6,13 @@ This repo replicates the performance achieved in this [paper](https://arxiv.org/
 
 To download CC3M (Google Conceptual Captions 3M), COCO, and SBU (SBU Captions) run the following commands in each subdirectory (i.e., cd to cc3m and run the script):
 
+```
 /datadrive
   ├── cc3m
   ├── mscoco
   ├── sbu
   └── vgo
+```
   
 Refer to Img2Dataset directly for more information [here](https://github.com/rom1504/img2dataset/blob/main/dataset_examples/cc3m.md). 
 
@@ -34,6 +36,7 @@ Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 ## Preprocessing datasets (for pretraining)
 Once everything is downloaded, to ensure that json_dataset.py works, please ensure this file structure:
 
+```
 /datadrive
   ├── cc3m
   │   └── cc3m                  <- Contains all the .parquet, 0000 subdir, etc.
@@ -45,6 +48,7 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
   │   ├── VG_100K               <- Contains all part 1 images
   │   ├── VG_100K_2             <- Contains all part 2 images - make sure to move all images in VG_100K_2 to VG_100K.
   │   └── region_descriptions.json
+```
 
 Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using Pytorch dataloader.
 The output dictionary (all.json) will look like this:
