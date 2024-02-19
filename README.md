@@ -5,11 +5,14 @@ This repo replicates the performance achieved in this [paper](https://arxiv.org/
 ## Instructions to download datasets
 
 To download CC3M (Google Conceptual Captions 3M), COCO, and SBU (SBU Captions) run the following commands in each subdirectory (i.e., cd to cc3m and run the script):
+
+--------
 /datadrive
-  /cc3m
-  /mscoco
-  /sbu
-  /vgo
+  ├── cc3m
+  ├── mscoco
+  ├── sbu
+  └── vgo
+--------
   
 Refer to Img2Dataset directly for more information [here](https://github.com/rom1504/img2dataset/blob/main/dataset_examples/cc3m.md). 
 
@@ -32,18 +35,20 @@ Refer to [here](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 
 ## Preprocessing datasets (for pretraining)
 Once everything is downloaded, to ensure that json_dataset.py works, please ensure this file structure:
-```json
+
+--------
 /datadrive
-  /cc3m
-    /cc3m (contains all the .parquet, 0000 subdir, etc.)
-  /mscoco
-    /mscoco (contains all the .parquet, 0000 subdir, etc.)
-  /sbu
-    /sbucaptions (contains all the .parquet, 0000 subdir, etc.)
-  /vgo
-    /VG_100K (contains all part 1 images)
-    /VG_100K_2 (contains all part 2 images - make sure to move all images in VG_100K_2 to VG_100K.)
-    /region_descriptions.json
+  ├── cc3m
+  │   └── cc3m                  <- Contains all the .parquet, 0000 subdir, etc.
+  ├── mscoco
+  │   └── mscoco                <- Contains all the .parquet, 0000 subdir, etc.
+  ├── sbu
+  │   └── sbucaptions           <- Contains all the .parquet, 0000 subdir, etc.
+  ├── vgo
+  │   ├── VG_100K               <- Contains all part 1 images
+  │   ├── VG_100K_2             <- Contains all part 2 images - make sure to move all images in VG_100K_2 to VG_100K.
+  │   └── region_descriptions.json
+--------
 
 Once everything is set, run json_dataset.py, and it will output a json containing all image-caption dictionary information in a new directory 'dataloader'. This dictionary will be used for pretraining using Pytorch dataloader.
 The output dictionary (all.json) will look like this:
@@ -58,6 +63,7 @@ The output dictionary (all.json) will look like this:
   "image_root": "/datadrive/sbu/sbucaptions/00000/000000016.jpg",
   "id": 0
 }]
+```
 
 ## Pretraining
 Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO. To pretrain, run pretrain_dlip.py or type this command for multi-gpu training:
