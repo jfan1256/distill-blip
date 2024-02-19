@@ -69,8 +69,8 @@ The output dictionary (all.json) will look like this:
 To pretrain, run pretrain_dlip.py or type this command for multi-gpu training:
 python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
 
-_Note, I Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO (which achieved results similar to paper). 
-_
+*Note: I Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO (which achieved results similar to paper).*
+
 ## Finetuning
 After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr.py and train_dlip_caption_flickr.py. The model will be finetuned on Flickr30K.
 
