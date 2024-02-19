@@ -74,10 +74,11 @@ The output dictionary (all.json) will look like this:
 ```
 ----------
 ## Pretrain
-To pretrain, run pretrain_dlip.py or type this command for multi-gpu training:
+To pretrain, run pretrain_dlip.py or run this command in command prompt for multi-gpu training (--nproc_per_node is the number of gpus to use):
+```bash
 python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
-
-*Note: I Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO (which achieved results similar to paper).*
+```
+*Note: I Utilized 4 A100 GPUs to Pretrain DLIP on CC3M, COCO, SBU, and VGO.*
 
 ----------
 
