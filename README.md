@@ -85,8 +85,8 @@ python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
 ## Finetune
 After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr.py and train_dlip_caption_flickr.py. The model will be finetuned on Flickr30K.
 
+Here is a result comparison between DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
 ```
-DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
 
 | Metric           | DLIP   | BLIP   |
 |------------------|--------|--------|
@@ -101,7 +101,7 @@ DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
 | `test_img_r10`   | 96.12  | 98.9   |
 
 ```
-
+As you can see, DLIP is practically as accurate as DLIP despite being 10x smaller.
 More details on BLIP results can be found [here](https://arxiv.org/pdf/2201.12086.pdf).
 
 ----------
