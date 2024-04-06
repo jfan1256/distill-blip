@@ -1,13 +1,3 @@
-'''
- * Copyright (c) 2022, salesforce.com, inc.
- * All rights reserved.
- * SPDX-License-Identifier: BSD-3-Clause
- * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- * By Junnan Li
- * Based on timm code base
- * https://github.com/rwightman/pytorch-image-models/tree/master/timm
-'''
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
