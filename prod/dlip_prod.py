@@ -102,7 +102,8 @@ class DLIPProd(nn.Module):
 
     # Load Model
     def load_model(self):
-        checkpoint = torch.load(self.weight, map_location='cpu')
+        self.to(self.device)
+        checkpoint = torch.load(self.weight, map_location=self.device)
         state_dict = checkpoint['model']
         state_dict['visual_encoder.pos_embed'] = self.interpolate_pos_embed(state_dict['visual_encoder.pos_embed'], self.visual_encoder)
         for key in self.state_dict().keys():
@@ -226,9 +227,3 @@ if __name__ == '__main__':
     print("Text feature shape: {}".format(text_feat.shape))
     print("Finished getting features!")
     print("-"*120)
-
-
-
-
-
-    
