@@ -3,12 +3,12 @@ import cv2
 import torch
 import numpy as np
 import torch.nn.functional as F
-from torchvision import transforms
 
 from torch import nn
 from PIL import Image
 from torchvision.transforms import InterpolationMode
 from transformers import BertTokenizer
+from torchvision import transforms
 
 from models.vit import VisionTransformer
 from models.med import BertConfig, BertModel, BertLMHeadModel
@@ -19,7 +19,7 @@ class DLIPProd(nn.Module):
                  weight: str = '../save/dlip_retrieval_flickr.pth',
                  device: str = 'cpu',
                  ):
-        
+
         '''
         name: Name of model to use (either 'caption' or 'retrieval'
         weight: Directory str path for model weights following the format {'model': <torch model state dict>}
@@ -34,7 +34,7 @@ class DLIPProd(nn.Module):
         if not os.path.isfile(weight):
             raise FileNotFoundError("File {} does not exist.".format(weight))
 
-        # Super 
+        # Super
         super().__init__()
 
         # Initialize device
@@ -51,15 +51,20 @@ class DLIPProd(nn.Module):
 
         # Initialize Visual Encoder
         vision_width = 384
-        self.visual_encoder = VisionTransformer(img_size=384, patch_size=16, embed_dim=vision_width, depth=12, num_heads=6, use_grad_checkpointing=True, ckpt_layer=4, drop_path_rate=0)
+        self.visual_encoder = VisionTransformer(img_size=384, patch_size=16, embed_dim=vision_width, depth=12,
+                                                num_heads=6, use_grad_checkpointing=True, ckpt_layer=4,
+                                                drop_path_rate=0)
 
         # Initialize Text Encoder or Text Decoder
-        bert_config = {"architectures": ["BertModel"], "attention_probs_dropout_prob": 0.1, "hidden_act": "gelu", "hidden_dropout_prob": 0.1, "hidden_size": 384, "initializer_range": 0.02,
-                       "intermediate_size": 3072, "layer_norm_eps": 1e-12, "max_position_embeddings": 512, "model_type": "bert", "num_attention_heads": 12, "num_hidden_layers": 6,
-                       "pad_token_id": 0, "type_vocab_size": 2, "vocab_size": 30524, "encoder_width": 384, "add_cross_attention": True}
+        bert_config = {"architectures": ["BertModel"], "attention_probs_dropout_prob": 0.1, "hidden_act": "gelu",
+                       "hidden_dropout_prob": 0.1, "hidden_size": 384, "initializer_range": 0.02,
+                       "intermediate_size": 3072, "layer_norm_eps": 1e-12, "max_position_embeddings": 512,
+                       "model_type": "bert", "num_attention_heads": 12, "num_hidden_layers": 6,
+                       "pad_token_id": 0, "type_vocab_size": 2, "vocab_size": 30524, "encoder_width": 384,
+                       "add_cross_attention": True}
         bert_config = BertConfig(**bert_config)
         bert_config.encoder_width = vision_width
-        
+
         if name == 'caption':
             self.text_decoder = BertLMHeadModel(config=bert_config)
         elif name == 'retrieval':
@@ -69,7 +74,7 @@ class DLIPProd(nn.Module):
         if name == 'retrieval':
             self.vision_proj = nn.Linear(vision_width, 256)
             self.text_proj = nn.Linear(vision_width, 256)
-        
+
         # Initialize Trained Model
         self.load_model()
 
@@ -105,7 +110,8 @@ class DLIPProd(nn.Module):
         self.to(self.device)
         checkpoint = torch.load(self.weight, map_location=self.device)
         state_dict = checkpoint['model']
-        state_dict['visual_encoder.pos_embed'] = self.interpolate_pos_embed(state_dict['visual_encoder.pos_embed'], self.visual_encoder)
+        state_dict['visual_encoder.pos_embed'] = self.interpolate_pos_embed(state_dict['visual_encoder.pos_embed'],
+                                                                            self.visual_encoder)
         for key in self.state_dict().keys():
             if key in state_dict.keys():
                 if state_dict[key].shape != self.state_dict()[key].shape:
@@ -197,21 +203,24 @@ class DLIPProd(nn.Module):
     # Get text feature (returns torch.Size([number of images, 256])
     def get_text_feat(self, caption):
         # Get features
-        text = self.tokenizer(caption, padding='max_length', truncation=True, max_length=30, return_tensors="pt").to(self.device)
-        text_output = self.text_encoder(text.input_ids, attention_mask=text.attention_mask, return_dict=True, mode='text')
+        text = self.tokenizer(caption, padding='max_length', truncation=True, max_length=30, return_tensors="pt").to(
+            self.device)
+        text_output = self.text_encoder(text.input_ids, attention_mask=text.attention_mask, return_dict=True,
+                                        mode='text')
         text_feat = F.normalize(self.text_proj(text_output.last_hidden_state[:, 0, :]), dim=-1)
         return text_feat
 
+
 if __name__ == '__main__':
     # Load Model
-    print("-"*120)
+    print("-" * 120)
     print("Loading model...")
     dlip_caption = DLIPProd(name='caption', weight='../save/dlip_caption_flickr.pth', device='cpu')
     dlip_retrieval = DLIPProd(name='retrieval', weight='../save/dlip_retrieval_flickr.pth', device='cpu')
     print("Finished loading model!")
 
     # Generate Caption
-    print("-"*120)
+    print("-" * 120)
     print("Generating...")
     image = Image.open('../export/share/datasets/vision/flickr30k/flickr30k-images/flickr30k_images/148284.jpg')
     caption = dlip_caption.generate(image)
@@ -219,11 +228,16 @@ if __name__ == '__main__':
     print("Finished generating captions!")
 
     # Get Image Feat and Text Feat
-    print("-"*120)
+    print("-" * 120)
     print("Getting image and text feature...")
     image_feat = dlip_retrieval.get_image_feat(image)
     text_feat = dlip_retrieval.get_text_feat(caption)
     print("Image feature shape: {}".format(image_feat.shape))
     print("Text feature shape: {}".format(text_feat.shape))
     print("Finished getting features!")
-    print("-"*120)
+    print("-" * 120)
+
+
+
+
+

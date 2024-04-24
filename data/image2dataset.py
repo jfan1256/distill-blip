@@ -175,17 +175,17 @@ if __name__ == "__main__":
     print("-" * 60 + "SBU" + "-" * (60-3))
     dataset_json(parent_dir="/datadrive/sbu/sbucaptions", output_dir="/datadrive/dataloader", json_name="sbu")
 
-    # # COCO
-    # print("-" * 60 + "COCO" + "-" * (60-4))
-    # dataset_json(parent_dir="/datadrive/mscoco/mscoco", output_dir="/datadrive/dataloader", json_name="coco")
+    # COCO
+    print("-" * 60 + "COCO" + "-" * (60-4))
+    dataset_json(parent_dir="/datadrive/mscoco/mscoco", output_dir="/datadrive/dataloader", json_name="coco")
 
     # CC3M
     print("-" * 60 + "cc3m" + "-" * (60-4))
     dataset_json(parent_dir="/datadrive/cc3m/cc3m", output_dir="/datadrive/dataloader", json_name="cc3m")
 
-    # # VGO
-    # print("-" * 60 + "VGO" + "-" * (60-3))
-    # dataset_vgo(json_dir="/datadrive/vgo/region_descriptions.json", image_dir="/datadrive/vgo/VG_100K", output_dir="/datadrive/dataloader", json_name="vgo")
+    # VGO
+    print("-" * 60 + "VGO" + "-" * (60-3))
+    dataset_vgo(json_dir="/datadrive/vgo/region_descriptions.json", image_dir="/datadrive/vgo/VG_100K", output_dir="/datadrive/dataloader", json_name="vgo")
 
     # ALL
     print("-" * 60 + "ALL" + "-" * (60-3))
