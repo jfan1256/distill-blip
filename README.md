@@ -1,4 +1,4 @@
-# DLIP V2 (Distilling BLIP)
+# Distill Blip
 
 ----------
 
