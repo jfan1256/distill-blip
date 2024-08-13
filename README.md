@@ -56,7 +56,7 @@ Once everything is downloaded, to ensure that json_dataset.py works, please ensu
   │   └── region_descriptions.json
 ```
 
-Once everything is set, run image2dataset_process.py, and it will output all.json in a self-created directory '/datadrive/dataloader', 
+Once everything is set, run image2dataset_process.py under the "process" directory, and it will output all.json in a self-created directory '/datadrive/dataloader', 
 which contains all image-caption items from CC3M, COCO, SBU, and VGO . This dictionary will be used for pretraining dlip.
 The output dictionary (all.json) will look like this:
 
@@ -83,7 +83,10 @@ python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
 ----------
 
 ## Finetune
-After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr.py and train_dlip_caption_flickr.py. The model will be finetuned on Flickr30K.
+After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr30k.py and train_dlip_caption_flickr30k.py. The model will be finetuned on Flickr30K.
+
+In addition, if you would like to finetune on more datasets, you can use train_dlip_retrieval.py. Currently, the code is designed to finetune DLIP on COCO, TextCaps, and Flickr30k (all datasets can be downloaded online).
+The "process" directory processes COCO's and TextCaps's annotations files to follow Flickr30k's format for finetuning. 
 
 Here is a result comparison between DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
 ```

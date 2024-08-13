@@ -24,10 +24,22 @@ def handle_case(transform, image):
 
 # Transform Image
 def transform(image):
+    # Convert to RGB
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
     # Resize the image
     image_resized = cv2.resize(np.asarray(image), (384, 384), interpolation=cv2.INTER_CUBIC)
 
     image_scaled = image_resized / 255.0
+
+    # Ensure image has three channels (add channel if grayscale)
+    if image_scaled.ndim == 2:
+        image_scaled = np.stack((image_scaled,) * 3, axis=-1)
+
+    # Check the shape of the image_scaled, it must be (384, 384, 3)
+    if image_scaled.shape[2] != 3:
+        raise ValueError(f"Expected image with 3 channels, got {image_scaled.shape[2]}")
 
     output = torch.tensor(image_scaled).permute(2, 0, 1).float()
     # Normalize the image
@@ -48,7 +60,14 @@ def get_tag_batch(items, model):
 if __name__ == '__main__':
     # Params
     directory_path = '../export/share/datasets/vision/flickr30k/flickr30k-images/'
-    output_path = '../export/share/datasets/tag/'
+    image_dir = f'flickr30k-images'
+    output_path = '../export/share/datasets/tag/id_and_tag_flickr30k'
+    # directory_path = '../export/share/datasets/vision/textcaps/train_images/'
+    # image_dir = f'train_images'
+    # output_path = '../export/share/datasets/tag/id_and_tag_textcaps'
+    # directory_path = '../export/share/datasets/vision/coco/train2014/train2014/'
+    # image_dir = f'train2014/train2014'
+    # output_path = '../export/share/datasets/tag/id_and_tag_coco'
     batch_size = 50
 
     # Load Model
@@ -80,21 +99,18 @@ if __name__ == '__main__':
     print("Export dataframe to", output_path)
     df_columns = ['id'] + [f'tag_{i + 1}' for i in range(10)]
     df = pd.DataFrame([[id] + tags for id, tags in zip(all_ids, all_tags_padded)], columns=df_columns)
-    df.to_csv(output_path + 'image_tags_10.csv', index=False)
+    df = df.sort_values('id')
+    df.to_csv(output_path + '.csv', index=False)
 
-    # Export dataframe to JSON
-    df = pd.read_csv(output_path + 'image_tags_10.csv')
-    print("Number of rows in the image tag dataframe before dropping NAN: ", len(df))
-    df = df.dropna()
-    print("Number of rows in the image tag dataframe after dropping NAN: ", len(df))
+    # Export dataframe to json
     json_records = []
     current_image_id = 0
     last_image = None
 
     # Iterate over each row in the DataFrame
     for index, row in df.iterrows():
-        # Construct the image path
-        image_path = f'flickr30k-images/{row["id"]}.jpg'
+        # Construct image_path
+        image_path = f'{image_dir}/{row["id"]}.jpg'
 
         # Check if this is a new image to update image_id
         if last_image != image_path:
@@ -114,5 +130,5 @@ if __name__ == '__main__':
 
     # Write the json to a file
     print("Export json to", output_path)
-    with open(output_path + 'image_tags_10.json', 'w') as json_file:
-        json.dump(json_records, json_file)
+    with open(output_path + '.json', 'w') as json_file:
+        json.dump(json_records, json_file, indent=4)

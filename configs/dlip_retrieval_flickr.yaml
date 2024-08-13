@@ -1,5 +1,5 @@
 # Data
-image_root: 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/flickr30k/'
+image_root: '../export/share/datasets/vision/flickr30k/'
 ann_root: 'annotation'
 dataset: 'flickr'
 

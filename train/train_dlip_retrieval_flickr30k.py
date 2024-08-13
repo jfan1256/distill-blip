@@ -60,7 +60,7 @@ def train(model, data_loader, optimizer, epoch, device, config):
         metric_logger.update(loss_ita=loss_ita.item())
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
 
-        # if i == 10:
+        # if i == 30:
         #     break
 
     # Gather the stats from all processes
@@ -236,7 +236,7 @@ def main(args, config):
 
     # Create dataset
     print("Creating retrieval dataset")
-    train_dataset, val_dataset, test_dataset = create_dataset(config['dataset'], config)
+    train_dataset, val_dataset, test_dataset = create_dataset('retrieval_%s'%config['dataset'], config)
 
     # Get world size and rank size for DDP
     if args.distributed:
@@ -274,21 +274,11 @@ def main(args, config):
     # Get best epoch
     best = 0
     best_epoch = 0
-    start_epoch = 0
-
-    # Load checkpoint model
-    if config['train_checkpoint'] != '':
-        print("Load Checkpoint")
-        checkpoint = torch.load(config['train_checkpoint'], map_location='cpu')
-        state_dict = checkpoint['model']
-        model.load_state_dict(state_dict)
-        optimizer.load_state_dict(checkpoint['optimizer'])
-        start_epoch = checkpoint['epoch']
 
     # Start training
     print("Start training")
     start_time = time.time()
-    for epoch in range(start_epoch, config['max_epoch']):
+    for epoch in range(0, config['max_epoch']):
         # Train model
         if not args.evaluate:
             # Set sampler to random per epoch
@@ -298,25 +288,26 @@ def main(args, config):
             cosine_lr_schedule(optimizer, epoch, config['max_epoch'], config['init_lr'], config['min_lr'])
             train_stats = train(model, train_loader, optimizer, epoch, device, config)
 
-        # # Get scores
-        # score_val_i2t, score_val_t2i, = evaluation(model_without_ddp, val_loader, device, config)
-        # score_test_i2t, score_test_t2i = evaluation(model_without_ddp, test_loader, device, config)
+        # Get scores
+        score_val_i2t, score_val_t2i, = evaluation(model_without_ddp, val_loader, device, config)
+        score_test_i2t, score_test_t2i = evaluation(model_without_ddp, test_loader, device, config)
 
         # Get validation results and save model
         if is_main_process():
-            # val_result = itm_eval(score_val_i2t, score_val_t2i, val_loader.dataset.txt2img, val_loader.dataset.img2txt)
-            # print(val_result)
-            save_obj = {
-                'model': model_without_ddp.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'config': config,
-                'epoch': epoch,
-            }
-            torch.save(save_obj, os.path.join(args.output_dir, 'checkpoint_%02d.pth' % epoch))
-            # best = val_result['r_mean']
-            # best_epoch = epoch
-            # test_result = itm_eval(score_test_i2t, score_test_t2i, test_loader.dataset.txt2img, test_loader.dataset.img2txt)
-            # print(test_result)
+            val_result = itm_eval(score_val_i2t, score_val_t2i, val_loader.dataset.txt2img, val_loader.dataset.img2txt)
+            print(val_result)
+            if val_result['r_mean']>best:
+                save_obj = {
+                    'model': model_without_ddp.state_dict(),
+                    'optimizer': optimizer.state_dict(),
+                    'config': config,
+                    'epoch': epoch,
+                }
+                torch.save(save_obj, os.path.join(args.output_dir, 'dlip_retrieval_flickr_6.pth'))
+                best = val_result['r_mean']
+                best_epoch = epoch
+                test_result = itm_eval(score_test_i2t, score_test_t2i, test_loader.dataset.txt2img, test_loader.dataset.img2txt)
+                print(test_result)
 
             if args.evaluate:
                 log_stats = {**{f'val_{k}': v for k, v in val_result.items()},
@@ -326,10 +317,10 @@ def main(args, config):
                     f.write(json.dumps(log_stats) + "\n")
             else:
                 log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
-                             # **{f'val_{k}': v for k, v in val_result.items()},
-                             # **{f'test_{k}': v for k, v in test_result.items()},
+                             **{f'val_{k}': v for k, v in val_result.items()},
+                             **{f'test_{k}': v for k, v in test_result.items()},
                              'epoch': epoch,
-                             # 'best_epoch': best_epoch,
+                             'best_epoch': best_epoch,
                             }
                 with open(os.path.join(args.output_dir, "log.txt"),"a") as f:
                     f.write(json.dumps(log_stats) + "\n")
@@ -351,10 +342,10 @@ def main(args, config):
 if __name__ == '__main__':
     # Create arg parser
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='../configs/dlip_retrieval_flickr_large.yaml')
-    parser.add_argument('--output_dir', default='output/DLIP_Retrieval_flickr_large')
-    parser.add_argument('--evaluate', default=False, action='store_true')
-    parser.add_argument('--device', default='cuda:0')
+    parser.add_argument('--config', default='../configs/dlip_retrieval_flickr.yaml')
+    parser.add_argument('--output_dir', default='output/DLIP_Retrieval_flickr')
+    parser.add_argument('--evaluate', action='store_true')
+    parser.add_argument('--device', default='cuda')
     parser.add_argument('--seed', default=42, type=int)
     parser.add_argument('--world_size', default=1, type=int, help='number of distributed processes')
     parser.add_argument('--dist_url', default='env://', help='url used to set up distributed training')
