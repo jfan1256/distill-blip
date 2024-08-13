@@ -1,0 +1,36 @@
+# Data
+image_root:
+  - 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/flickr30k/'
+  - 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/textcaps/'
+  - 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/coco/'
+ann_root: 'C:/Jonathan/DistillationResearch/dlip-work/export/share/datasets/vision/finetune/'
+dataset: 'finetune'
+prompt: ''
+
+# Train
+batch_size_train: 32
+batch_size_test: 16
+image_size: 384
+queue_size: 57600
+alpha: 0.4
+k_test: 128
+max_epoch: 6
+
+# Checkpoint
+pretrained: '../save/dlip_pretrain_20.pth'
+train_checkpoint: ''
+
+# Vit
+vit: 'small'
+vit_grad_ckpt: True
+vit_ckpt_layer: 4
+negative_all_rank: False
+
+# Bert
+bert: 'small'
+med_config: '../configs/bert-small_config.json'
+
+# Optimizer
+init_lr: 0.00005
+weight_decay: 0.05
+min_lr: 0
