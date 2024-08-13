@@ -85,7 +85,8 @@ python -m torch.distributed.run --nproc_per_node=4 pretrain_dlip.py
 ## Finetune
 After pretraining dlip, you can finetune the pretrained dlip model for retrieval and captioning by running train_dlip_retrieval_flickr30k.py and train_dlip_caption_flickr30k.py. The model will be finetuned on Flickr30K.
 
-In addition, if you would like to finetune on more datasets, you can use train_dlip_retrieval.py. Currently, the code is designed to finetune DLIP on COCO, TextCaps, and Flickr30k (all datasets can be downloaded online).
+In addition, if you would like to finetune on more datasets, you can use train_dlip_retrieval.py. finetune_dataset.py adds an additional caption per image 
+formatted as "{tag_1}, {tag_2}, ..., {tag_last}" to improve tagging performance. You must first generate these tags using get_tag_ram.py under the "tag" directory. Currently, the code is designed to finetune DLIP on COCO, TextCaps, and Flickr30k (all datasets can be downloaded online).
 The "process" directory processes COCO's and TextCaps's annotations files to follow Flickr30k's format for finetuning. 
 
 Here is a result comparison between DLIP Retrieval vs. BLIP (CapFilt-L) Retrieval on Flickr30K Test:
